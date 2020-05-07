@@ -2,7 +2,7 @@
 A web scraping app for recipes
 
 ## Introduction
-Have you ever searched the internet for a recipe and the results turned up a bunch of irrelevant text? Have you ever had a recipe up on your phone while cooking and struggled to read the instructions because the page was too full of ads and decorative elements? Instead of being designed for maximum usability, recipe sites are often designed to maximize ad revenue and search engine optimization. This results in a terrible user experience. Chef Hopper will remedy this by scraping relevant information from popular recipe sites, and returning it in a concise and usy-to-read format.
+Have you ever searched the internet for a recipe and the results turned up a bunch of irrelevant text? Have you ever had a recipe up on your phone while cooking and struggled to read the instructions because the page was too full of ads and decorative elements? Instead of being designed for maximum usability, recipe sites are often designed to maximize ad revenue and search engine optimization. This results in a terrible user experience. Chef Hopper will remedy this by scraping relevant information from popular recipe sites, and returning it in a concise and easy-to-read format.
 
 ## User Stories
 * The page loads with a simple search bar
