@@ -6,5 +6,9 @@ def test_route(request):
 	return JsonResponse({'message': 'route is working'})
 
 def get_recipes(request, query):
-	urls = get_all_recipes_urls(query)
-	return JsonResponse({"message": urls})	
+	recipes = scrape_recipes(query, 1)
+	return JsonResponse({
+		"data": recipes,
+		"message": str(len(recipes)) + " recipes returned",
+		"status": 200
+		})	
