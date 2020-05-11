@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import requests
 import time
+import datetime
+from .models import ScrapeException
 
 def get_all_recipes_urls(query):
 	search_url = "https://www.allrecipes.com/search/results"
@@ -35,13 +37,52 @@ def scrape_all_recipes_recipe(url):
 			"instructions": instructions,
 		}
 
+def get_food_network_urls(query):
+	food_nw_query = query.replace(" ", "-") + "-"
+	search_url = "https://foodnetwork.com/search/" + food_nw_query
+	search_response = requests.get(search_url, verify=False)
+	soup = BeautifulSoup(search_response.text)
+	recipe_urls = soup.find_all("h3", class_="m-MediaBlock__a-Headline")
+	recipe_urls = ["https:" + url.find("a")["href"] for url in recipe_urls]
+	return recipe_urls
+
+def scrape_food_network_recipe(url):
+	try:
+		response = requests.get(url)
+		soup = BeautifulSoup(response.text)
+		title = str(soup.find("span", class_="o-AssetTitle__a-HeadlineText").string)
+		print(title)
+		ingredients = soup.find_all("p", class_="o-Ingredients__a-Ingredient")
+		ingredients = [str(ingredient.string) for ingredient in ingredients]
+		instructions = soup.find_all("li", class_="o-Method__m-Step")
+		instructions = [str(instruction.string).strip() for instruction in instructions]
+		return {
+			"url": url,
+			"title": title,
+			"ingredients": ingredients,
+			"instructions": instructions
+		}
+	except AttributeError:
+		ScrapeException.objects.create(
+			url=url,
+			exception_type="AttributeError",
+			occurence=datetime.datetime.now()
+		)
+		return False
+
 
 def scrape_recipes(query, recipes_per_site):
-	urls = get_all_recipes_urls(query)[:recipes_per_site]
+	all_recipe_urls = get_all_recipes_urls(query)
+	food_network_urls = get_food_network_urls(query)
 	recipes = []
-	for url in urls:
+	for i in range(0, recipes_per_site):
 		time.sleep(1)
-		recipes.append(scrape_all_recipes_recipe(url))
+		new_all_recipes_recipe = scrape_all_recipes_recipe(all_recipe_urls[i])
+		new_food_network_recipe = scrape_food_network_recipe(food_network_urls[i])
+		if new_all_recipes_recipe:
+			recipes.append(new_all_recipes_recipe)
+		if new_food_network_recipe:
+			recipes.append(new_food_network_recipe)
 	return recipes
 
 
