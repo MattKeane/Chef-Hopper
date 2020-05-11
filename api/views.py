@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from scraper.scraper import scrape_recipes
-from .models import Search, Recipe, RecipeSerializer
+from .models import Search, Recipe
 
 def test_route(request):
 	return JsonResponse({'message': 'route is working'})
@@ -27,7 +27,10 @@ def search(request, query):
 					"ingredients": recipe["ingredients"],
 					"instructions": recipe["instructions"]
 				})
-			print(obj.id)
+			Search.objects.create(
+				search_term=query,
+				recipe=obj
+			)
 		return JsonResponse({
 			"data": recipes,
 			"status": 200
