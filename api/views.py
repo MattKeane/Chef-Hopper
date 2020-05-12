@@ -12,8 +12,9 @@ def search(request, query):
 	query = query.replace("+", " ")
 	existing_results = Search.objects.filter(search_term=query)
 	if len(existing_results) == 0:
-		recipes = scrape_recipes(query, 5)
-		for recipe in recipes:
+		recipes = []
+		new_recipes = scrape_recipes(query, 5)
+		for recipe in new_recipes:
 			obj, created = Recipe.objects.get_or_create(
 				url=recipe["url"],
 				defaults={
@@ -25,6 +26,7 @@ def search(request, query):
 				search_term=query,
 				recipe=obj
 			)
+			recipes.append(RecipeSerializer(obj).data)
 		return JsonResponse({
 			"message": "recipes added to database",
 			"data": recipes,
