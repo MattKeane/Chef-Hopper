@@ -8,6 +8,7 @@ class Recipe(models.Model):
 		models.CharField(max_length=255))
 	instructions = ArrayField(
 		models.TextField())
+	avg_rating = models.FloatField(default=0)
 
 class Search(models.Model):
 	search_term = models.CharField(max_length=128)

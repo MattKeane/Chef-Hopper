@@ -102,6 +102,12 @@ def scrape_food_network_recipe(url):
 		log_exception(url, "KeyError")
 		return False
 
+def get_food_dot_com_urls(query):
+	query = query.replace(" ", "+")
+	search_url = "https://www.food.com/search/" + query
+	search_response = requests.get(search_url)
+	print(search_response.text)
+
 
 def scrape_recipes(query, recipes_per_site):
 	all_recipe_urls = get_all_recipes_urls(query)
