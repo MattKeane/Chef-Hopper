@@ -7,7 +7,7 @@ class Recipe(models.Model):
 	ingredients = ArrayField(
 		models.CharField(max_length=255))
 	instructions = ArrayField(
-		models.CharField(max_length=255))
+		models.TextField())
 
 class Search(models.Model):
 	search_term = models.CharField(max_length=128)
