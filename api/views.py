@@ -27,11 +27,18 @@ def search(request, query):
 				recipe=obj
 			)
 			recipes.append(RecipeSerializer(obj).data)
-		return JsonResponse({
-			"message": "recipes added to database",
-			"data": recipes,
-			"status": 200
-			})
+		if recipes:
+			return JsonResponse({
+				"message": "recipes added to database",
+				"data": recipes,
+				"status": 201
+				})
+		else:
+			return JsonResponse({
+				"message": "Search returned no results.",
+				"data": [],
+				"status": 200
+				})
 	else:
 		recipes = [RecipeSerializer(result.recipe).data for result in existing_results]
 		return JsonResponse({
