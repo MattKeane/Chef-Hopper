@@ -74,3 +74,13 @@ def register(request):
 			"message": "user already exists",
 			"status": 401
 			})
+
+def get_logged_in_user(request):
+	if request.user.is_authenticated:
+		return JsonResponse({
+			"message": "user is logged in"
+			})
+	else:
+		return JsonResponse({
+			"message": "no user logged in"
+			})
