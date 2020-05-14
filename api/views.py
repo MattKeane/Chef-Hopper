@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from scraper.scraper import scrape_recipes
@@ -79,9 +79,20 @@ def get_logged_in_user(request):
 	if request.user.is_authenticated:
 		return JsonResponse({
 			"message": "user is logged in",
-			"data": UserSerializer(request.user).data
+			"data": UserSerializer(request.user).data,
+			"status": 200
 			})
 	else:
 		return JsonResponse({
-			"message": "no user logged in"
+			"data": {},
+			"message": "No user is currently logged in",
+			"status": 401
 			})
+
+def log_out(request):
+	logout(request)
+	return JsonResponse({
+		"data": {},
+		"message": "Logged out.",
+		"status": 200
+		})
