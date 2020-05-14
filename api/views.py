@@ -71,7 +71,7 @@ def register(request):
 			}) 
 	except IntegrityError:
 		return JsonResponse({
-			"message": "user already exists",
+			"message": "User already exists",
 			"status": 401
 			})
 
