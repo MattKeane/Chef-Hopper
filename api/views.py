@@ -7,7 +7,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
 from .models import Search, Recipe
-from .serializers import RecipeSerializer
+from .serializers import RecipeSerializer, UserSerializer
 import io
 import ast
 import json
@@ -62,10 +62,13 @@ def register(request):
 			email=request.data["email"],
 			password=request.data["password"]
 		)
-		print(user)
-		return(JsonResponse({
-			"message": "success!"
-			}))
+		# user_json = JSONRenderer().render(user)
+		# print(user_json)
+		return JsonResponse({
+			"message": "User created.",
+			"data": UserSerializer(user).data,
+			"status": 201
+			}) 
 	except IntegrityError:
 		return JsonResponse({
 			"message": "user already exists",
