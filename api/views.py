@@ -1,9 +1,15 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth.models import User
 from scraper.scraper import scrape_recipes
 from rest_framework.renderers import JSONRenderer
+from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view
 from .models import Search, Recipe
 from .serializers import RecipeSerializer
+import io
+import ast
+import json
 
 def test_route(request):
 	return JsonResponse({'message': 'route is working'})
@@ -46,3 +52,14 @@ def search(request, query):
 			"data": recipes,
 			"status": 200
 			})
+
+@api_view(["POST"])
+def register(request):
+	User.objects.create_user(
+		username=request.data["username"],
+		email=request.data["email"],
+		password=request.data["password"]
+	)
+	return(JsonResponse({
+		"message": "success!"
+		}))
