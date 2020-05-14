@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
 from scraper.scraper import scrape_recipes
@@ -62,8 +63,7 @@ def register(request):
 			email=request.data["email"],
 			password=request.data["password"]
 		)
-		# user_json = JSONRenderer().render(user)
-		# print(user_json)
+		login(request, user)
 		return JsonResponse({
 			"message": "User created.",
 			"data": UserSerializer(user).data,
