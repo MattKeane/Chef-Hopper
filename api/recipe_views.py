@@ -19,7 +19,7 @@ def save_recipe(request, recipe_id):
 			"message": "You must be logged in to do that",
 			"data" : {},
 			"status": 401
-			})
+		})
 
 def get_saved_recipes(request):
 	if request.user.is_authenticated:
@@ -29,14 +29,31 @@ def get_saved_recipes(request):
 			"message": "Returned " + str(len(saved_recipes)) + " recipes.",
 			"data": saved_recipes,
 			"status": 200
-			})
+		})
 	else:
 		return JsonResponse({
 			"message": "You must be logged in to do that",
 			"data": {},
 			"status": 401
-			})
+		})
 
+
+def remove_saved_recipe(request, recipe_id):
+	if request.user.is_authenticated:
+		recipe_to_remove = Recipe.objects.get(id=recipe_id)
+		request.user.profile.saved_recipe.remove(recipe_to_remove)
+		return JsonResponse({
+			"message": "Saved recipe removed",
+			"data": {},
+			"status": 200
+		})
+	else:
+		return JsonResponse({
+			"message": "You must be logged in to do that",
+			"data": {},
+			"status": 401
+		})
+	
 def test_recipe_views(request):
 	if request.user.is_authenticated:
 		test_recipe = Recipe.objects.get(id=70)
@@ -49,3 +66,4 @@ def test_recipe_views(request):
 		return JsonResponse({
 			"message": "test doesn't work"
 			})
+
