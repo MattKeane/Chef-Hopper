@@ -7,11 +7,9 @@ from scraper.scraper import scrape_recipes
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
 from rest_framework.decorators import api_view
-from .models import Search, Recipe
+from .models import Search, Recipe, Profile
 from .serializers import RecipeSerializer, UserSerializer
-import io
-import ast
-import json
+
 
 def test_route(request):
 	return JsonResponse({'message': 'route is working'})
@@ -62,6 +60,9 @@ def register(request):
 			username=request.data["username"],
 			email=request.data["email"],
 			password=request.data["password"]
+		)
+		profile = Profile.objects.create(
+			user=user
 		)
 		login(request, user)
 		return JsonResponse({
