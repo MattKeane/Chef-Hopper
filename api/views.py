@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 from scraper.scraper import scrape_recipes
 from rest_framework.renderers import JSONRenderer
 from rest_framework.parsers import JSONParser
@@ -55,11 +56,18 @@ def search(request, query):
 
 @api_view(["POST"])
 def register(request):
-	User.objects.create_user(
-		username=request.data["username"],
-		email=request.data["email"],
-		password=request.data["password"]
-	)
-	return(JsonResponse({
-		"message": "success!"
-		}))
+	try:
+		user = User.objects.create_user(
+			username=request.data["username"],
+			email=request.data["email"],
+			password=request.data["password"]
+		)
+		print(user)
+		return(JsonResponse({
+			"message": "success!"
+			}))
+	except IntegrityError:
+		return JsonResponse({
+			"message": "user already exists",
+			"status": 401
+			})
