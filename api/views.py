@@ -96,3 +96,23 @@ def log_out(request):
 		"message": "Logged out.",
 		"status": 200
 		})
+
+@api_view(["POST"])
+def log_in(request):
+	user = authenticate(
+		username=request.data["username"],
+		password=request.data["password"]
+	)
+	if user is not None:
+		login(request, user)
+		return JsonResponse({
+			"message": "user logged in",
+			"data": UserSerializer(user).data,
+			"status": 200
+			})
+	else:
+		return JsonResponse({
+			"message": "Invalid username or password",
+			"data": {},
+			"status": 401
+			})
