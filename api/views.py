@@ -78,7 +78,8 @@ def register(request):
 def get_logged_in_user(request):
 	if request.user.is_authenticated:
 		return JsonResponse({
-			"message": "user is logged in"
+			"message": "user is logged in",
+			"data": UserSerializer(request.user).data
 			})
 	else:
 		return JsonResponse({
