@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 from .models import Recipe, Profile
 from django.contrib.auth import authenticate
+from .serializers import RecipeSerializer
 
 def save_recipe(request, recipe_id):
 	if request.user.is_authenticated:
@@ -17,6 +18,22 @@ def save_recipe(request, recipe_id):
 		return JsonResponse({
 			"message": "You must be logged in to do that",
 			"data" : {},
+			"status": 401
+			})
+
+def get_saved_recipes(request):
+	if request.user.is_authenticated:
+		saved_recipes = request.user.profile.saved_recipe.all()
+		saved_recipes = [RecipeSerializer(recipe).data for recipe in saved_recipes]
+		return JsonResponse({
+			"message": "Returned " + str(len(saved_recipes)) + " recipes.",
+			"data": saved_recipes,
+			"status": 200
+			})
+	else:
+		return JsonResponse({
+			"message": "You must be logged in to do that",
+			"data": {},
 			"status": 401
 			})
 

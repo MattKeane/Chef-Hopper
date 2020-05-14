@@ -10,5 +10,6 @@ urlpatterns = [
 	path("auth/logout/", views.log_out, name="log out user"),
 	path("auth/login/", views.log_in, name="log in user"),
 	path("recipes/save/<recipe_id>", recipe_views.save_recipe, name="save a recipe"),
+	path("recipes/saved/", recipe_views.get_saved_recipes, name="get user's saved recipes"),
 	path("recipes/test/", recipe_views.test_recipe_views)
 ]
